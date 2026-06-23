@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Sanjeev M Portfolio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-dark: #1a2744;
+            --primary-yellow: #FFD700;
+            --text-light: #ffffff;
+            --text-gray: #a0a0a0;
+            --card-bg: #0f1823;
+            --danger: #f44336;
+            --success: #4CAF50;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, #0f1823 100%);
+            color: var(--text-light);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background: rgba(255, 215, 0, 0.1);
+            border-radius: 15px;
+            border: 2px solid var(--primary-yellow);
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            color: var(--primary-yellow);
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            color: var(--text-gray);
+            font-size: 1rem;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-box {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 15px;
+            border-left: 4px solid var(--primary-yellow);
+            text-align: center;
+        }
+
+        .stat-box h3 {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-box .value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary-yellow);
+        }
+
+        .section {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 215, 0, 0.1);
+        }
+
+        .section h2 {
+            color: var(--primary-yellow);
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            border-bottom: 2px solid var(--primary-yellow);
+            padding-bottom: 1rem;
+        }
+
+        .messages-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .message-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1.5rem;
+            border-radius: 10px;
+            border-left: 4px solid var(--primary-yellow);
+            transition: all 0.3s ease;
+        }
+
+        .message-item:hover {
+            background: rgba(255, 215, 0, 0.1);
+            transform: translateX(10px);
+        }
+
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+        }
+
+        .message-name {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--primary-yellow);
+        }
+
+        .message-email {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+        }
+
+        .message-time {
+            color: var(--text-gray);
+            font-size: 0.85rem;
+        }
+
+        .message-content {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            line-height: 1.6;
+        }
+
+        .message-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn-small {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-read {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-read:hover {
+            opacity: 0.8;
+        }
+
+        .btn-delete {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-delete:hover {
+            opacity: 0.8;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-new {
+            background: var(--primary-yellow);
+            color: var(--primary-dark);
+        }
+
+        .status-read {
+            background: rgba(255, 215, 0, 0.3);
+            color: var(--primary-yellow);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--text-gray);
+        }
+
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: var(--primary-yellow);
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border: 3px solid rgba(255, 215, 0, 0.3);
+            border-top: 3px solid var(--primary-yellow);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 1rem;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 2rem;
+            color: var(--primary-yellow);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .back-link:hover {
+            transform: translateX(-5px);
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8rem;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                gap: 1rem;
+            }
+
+            .section {
+                padding: 1.5rem;
+            }
+
+            .message-item {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-link">← Back to Portfolio</a>
+
+        <header>
+            <h1>📊 Admin Dashboard</h1>
+            <p>Manage contact messages and view portfolio statistics</p>
+        </header>
+
+        <div class="dashboard-grid" id="statsGrid">
+            <div class="stat-box">
+                <h3>Total Messages</h3>
+                <div class="value" id="totalMessages">-</div>
+            </div>
+            <div class="stat-box">
+                <h3>Unread Messages</h3>
+                <div class="value" id="unreadMessages">-</div>
+            </div>
+            <div class="stat-box">
+                <h3>Projects</h3>
+                <div class="value" id="totalProjects">3</div>
+            </div>
+            <div class="stat-box">
+                <h3>Certificates</h3>
+                <div class="value" id="totalCertificates">10</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>📧 Contact Messages</h2>
+            <div id="messagesContainer" class="loading">
+                <div class="spinner"></div>
+                Loading messages...
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>📈 Portfolio Statistics</h2>
+            <div id="statsContainer" class="loading">
+                <div class="spinner"></div>
+                Loading statistics...
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:3000/api';
+
+        // Load messages
+        async function loadMessages() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/contact/messages`);
+                const data = await response.json();
+
+                const container = document.getElementById('messagesContainer');
+
+                if (data.success && data.contacts.length > 0) {
+                    document.getElementById('totalMessages').textContent = data.total;
+                    document.getElementById('unreadMessages').textContent = data.unread;
+
+                    const html = data.contacts.map(msg => `
+                        <div class="message-item">
+                            <div class="message-header">
+                                <div>
+                                    <div class="message-name">${msg.name}</div>
+                                    <div class="message-email">${msg.email}</div>
+                                </div>
+                                <div>
+                                    <span class="status-badge status-${msg.read ? 'read' : 'new'}">
+                                        ${msg.read ? 'Read' : 'New'}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="message-content">${msg.message.replace(/\n/g, '<br>')}</div>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <span class="message-time">${new Date(msg.timestamp).toLocaleString()}</span>
+                                <div class="message-actions">
+                                    ${!msg.read ? `<button class="btn-small btn-read" onclick="markAsRead('${msg.id}')">Mark as Read</button>` : ''}
+                                    <button class="btn-small btn-delete" onclick="deleteMessage('${msg.id}')">Delete</button>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('');
+
+                    container.innerHTML = html;
+                } else {
+                    document.getElementById('totalMessages').textContent = '0';
+                    document.getElementById('unreadMessages').textContent = '0';
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">📭</div>
+                            <h3>No Messages Yet</h3>
+                            <p>When visitors submit the contact form, their messages will appear here.</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error loading messages:', error);
+                document.getElementById('messagesContainer').innerHTML = `
+                    <div class="empty-state">
+                        <p>Failed to load messages. Make sure the backend server is running on port 3000.</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Load statistics
+        async function loadStatistics() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/stats`);
+                const data = await response.json();
+
+                if (data.success) {
+                    const stats = data.stats;
+                    document.getElementById('totalProjects').textContent = stats.portfolio.projects;
+                    document.getElementById('totalCertificates').textContent = stats.portfolio.certificates;
+
+                    const html = `
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+                            <div style="background: rgba(255,215,0,0.1); padding: 1.5rem; border-radius: 10px;">
+                                <h3 style="color: var(--primary-yellow); margin-bottom: 1rem;">Portfolio Stats</h3>
+                                <p>Projects: <strong>${stats.portfolio.projects}</strong></p>
+                                <p>Certificates: <strong>${stats.portfolio.certificates}</strong></p>
+                                <p>Internships: <strong>${stats.portfolio.internships}</strong></p>
+                                <p>LinkedIn Followers: <strong>${stats.portfolio.linkedinFollowers}+</strong></p>
+                            </div>
+                            <div style="background: rgba(255,215,0,0.1); padding: 1.5rem; border-radius: 10px;">
+                                <h3 style="color: var(--primary-yellow); margin-bottom: 1rem;">Content Stats</h3>
+                                <p>Video Edits: <strong>${stats.content.videoEdits}</strong></p>
+                                <p>Design Projects: <strong>${stats.content.designProjects}</strong></p>
+                                <p>Web Projects: <strong>${stats.content.webProjects}</strong></p>
+                                <p>Total Skills: <strong>${stats.skills.total}</strong></p>
+                            </div>
+                            <div style="background: rgba(255,215,0,0.1); padding: 1.5rem; border-radius: 10px;">
+                                <h3 style="color: var(--primary-yellow); margin-bottom: 1rem;">Engagement</h3>
+                                <p>LinkedIn Reach: <strong>${stats.engagement.linkedinReach}</strong></p>
+                                <p>Video Views: <strong>${stats.engagement.videoViews}</strong></p>
+                                <p>Experience (months): <strong>${stats.experience.totalExperienceMonths}</strong></p>
+                            </div>
+                        </div>
+                    `;
+                    document.getElementById('statsContainer').innerHTML = html;
+                }
+            } catch (error) {
+                console.error('Error loading statistics:', error);
+                document.getElementById('statsContainer').innerHTML = `
+                    <div class="empty-state">
+                        <p>Failed to load statistics.</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Mark message as read
+        async function markAsRead(id) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/contact/${id}/read`, {
+                    method: 'PUT'
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    alert('Message marked as read');
+                    loadMessages();
+                }
+            } catch (error) {
+                console.error('Error marking message as read:', error);
+                alert('Error marking message as read');
+            }
+        }
+
+        // Delete message
+        async function deleteMessage(id) {
+            if (confirm('Are you sure you want to delete this message?')) {
+                try {
+                    const response = await fetch(`${API_BASE_URL}/contact/${id}`, {
+                        method: 'DELETE'
+                    });
+                    const data = await response.json();
+
+                    if (data.success) {
+                        alert('Message deleted');
+                        loadMessages();
+                    }
+                } catch (error) {
+                    console.error('Error deleting message:', error);
+                    alert('Error deleting message');
+                }
+            }
+        }
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', () => {
+            loadMessages();
+            loadStatistics();
+            
+            // Refresh messages every 30 seconds
+            setInterval(loadMessages, 30000);
+        });
+    </script>
+</body>
+</html>

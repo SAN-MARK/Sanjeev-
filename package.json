@@ -1,0 +1,27 @@
+{
+  "name": "sanjeev-portfolio-backend",
+  "version": "1.0.0",
+  "description": "Backend API for Sanjeev M Portfolio Website",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "keywords": [
+    "portfolio",
+    "api",
+    "backend"
+  ],
+  "author": "Sanjeev M",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "nodemailer": "^6.9.3",
+    "express-validator": "^7.0.0",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {}
+}
