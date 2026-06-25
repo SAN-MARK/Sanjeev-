@@ -90,12 +90,24 @@ nav.scrolled{
 .hero-content{flex:1;z-index:10;animation:fadeInLeft 0.8s ease-out;}
 .hero-image{flex:1;display:flex;justify-content:center;align-items:center;z-index:10;}
 
-.profile-circle{
-  width:320px;height:320px;border-radius:50%;
-  background:var(--grad);
-  padding:3px;
-  animation:rotateGlow 4s ease-in-out infinite;
-  position:relative;
+..profile-circle {
+    width: 320px;
+    height: 320px;
+    border-radius: 50%;
+    background: var(--grad);
+    padding: 3px;
+    animation: rotateGlow 4s ease-in-out infinite;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.profile-circle img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    display: block;
+}
 }
 .profile-circle-inner{
   width:100%;height:100%;border-radius:50%;
@@ -621,6 +633,9 @@ footer{
     <!-- Hero Section -->
     <section class="hero" id="home">
         <div class="hero-content">
+          <div class="hero-title">
+                Hi, I'm 
+                <div class="underline-animation"></div>
             <div class="hero-title">
                 SANJEEV M
                 <div class="underline-animation"></div>
